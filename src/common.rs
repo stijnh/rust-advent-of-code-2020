@@ -1,5 +1,6 @@
 pub use anyhow::{anyhow, bail, Context as _, Error};
 use std::default::Default;
+use std::cmp::{Ord, Ordering};
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;
 
@@ -18,4 +19,8 @@ pub fn read_input(filename: &str) -> Result<Vec<String>> {
         .lines()
         .collect::<Result<_, _>>()
         .with_context(|| format!("error while reading {}", path))
+}
+
+pub fn cmp<T: Ord>(lhs: T, rhs: T) -> Ordering {
+    Ord::cmp(&lhs, &rhs)
 }

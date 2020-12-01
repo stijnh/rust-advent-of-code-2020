@@ -1,4 +1,5 @@
 use crate::common::*;
+use std::cmp::Ordering::*;
 
 fn parse_input(filename: &str) -> Result<Vec<usize>> {
     let mut numbers = read_input(filename)?
@@ -17,14 +18,10 @@ fn find_two(numbers: &[usize], sum: usize) -> Option<[usize; 2]> {
     while i < j {
         let (a, b) = (numbers[i], numbers[j]);
 
-
-
-        if a + b > sum {
-            j -= 1;
-        } else if a + b < sum {
-            i += 1;
-        } else {
-            return Some([a, b]);
+        match cmp(a + b, sum) {
+            Equal => return Some([a, b]),
+            Greater => j -= 1,
+            Less => i += 1,
         }
     }
 
