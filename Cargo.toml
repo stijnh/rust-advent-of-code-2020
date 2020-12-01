@@ -1,0 +1,7 @@
+[package]
+authors = ["stijn <s.heldens@esciencecenter.nl>"]
+edition = "2018"
+name = "rust-advent-of-code-2020"
+version = "0.1.0"
+[dependencies]
+anyhow = "1.0.34"
