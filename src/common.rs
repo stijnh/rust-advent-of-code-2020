@@ -1,6 +1,7 @@
 pub use anyhow::{anyhow, bail, Context as _, Error};
-use std::default::Default;
+pub use itertools::{enumerate, zip, Itertools};
 use std::cmp::{Ord, Ordering};
+use std::default::Default;
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;
 

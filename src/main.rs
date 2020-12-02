@@ -1,11 +1,12 @@
 mod common;
 mod day01;
+mod day02;
 
 use common::*;
 use std::env;
 
 fn main() -> Result {
-    let funs = [day01::run];
+    let funs = [day01::run, day02::run];
 
     let mut args = env::args();
     let binary = args.next().unwrap_or_default();
@@ -16,7 +17,7 @@ fn main() -> Result {
         if x > 0 && x <= funs.len() {
             (funs[x - 1])()
         } else {
-            bail!("day must be a number between 1 and {}", funs.len() + 1);
+            bail!("day must be a number between 1 and {}", funs.len());
         }
     } else {
         bail!("usage: {} [day]", binary);
