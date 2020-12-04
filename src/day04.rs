@@ -26,7 +26,6 @@ fn parse_input(content: &str) -> Vec<HashMap<&str, &str>> {
 fn has_fields(passport: &HashMap<&str, &str>) -> bool {
     const FIELDS: [&str; 7] = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
 
-
     all(&FIELDS, |f| passport.contains_key(f))
 }
 
@@ -42,47 +41,40 @@ fn is_valid_passport(passport: &HashMap<&str, &str>) -> bool {
     fn check_height(value: &str) -> bool {
         let n = value.len();
         if value.ends_with("in") {
-            check_int(&value[..n -2], 59, 76)
+            check_int(&value[..n - 2], 59, 76)
         } else if value.ends_with("cm") {
-            check_int(&value[..n -2], 150, 193)
+            check_int(&value[..n - 2], 150, 193)
         } else {
             false
         }
     }
-    
+
     fn check_regex(value: &str, regex: &str) -> bool {
         Regex::new(regex).unwrap().is_match(value)
     }
 
     fn check_eyes(value: &str) -> bool {
         ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&value)
-
     }
 
-    has_fields(&passport) &&
-        check_int(passport["byr"], 1920, 2002) &&
-        check_int(passport["iyr"], 2010, 2020) &&
-        check_int(passport["eyr"], 2020, 2030) &&
-        check_height(passport["hgt"]) &&
-        check_regex(passport["hcl"], "^#[0-9a-f]{6}$") &&
-        check_eyes(passport["ecl"]) &&
-        check_regex(passport["pid"], "^[0-9]{9}$")
+    has_fields(&passport)
+        && check_int(passport["byr"], 1920, 2002)
+        && check_int(passport["iyr"], 2010, 2020)
+        && check_int(passport["eyr"], 2020, 2030)
+        && check_height(passport["hgt"])
+        && check_regex(passport["hcl"], "^#[0-9a-f]{6}$")
+        && check_eyes(passport["ecl"])
+        && check_regex(passport["pid"], "^[0-9]{9}$")
 }
 
 pub fn run() -> Result {
     let content = &read_input("day04")?.join("\n");
     let passports = parse_input(&content);
 
-    let count = passports
-        .iter()
-        .filter(|p| has_fields(p))
-        .count();
+    let count = passports.iter().filter(|p| has_fields(p)).count();
     println!("part A: {}", count);
 
-    let count = passports
-        .iter()
-        .filter(|p| is_valid_passport(p))
-        .count();
+    let count = passports.iter().filter(|p| is_valid_passport(p)).count();
     println!("part B: {}", count);
 
     Ok(())

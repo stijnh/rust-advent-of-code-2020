@@ -13,10 +13,9 @@ fn parse_input(lines: Vec<String>) -> Result<Array2<char>> {
 
     for (i, line) in enumerate(lines) {
         for (j, c) in enumerate(line.chars()) {
-            result[[i,j]] = c;
+            result[[i, j]] = c;
         }
     }
-
 
     Ok(result)
 }
@@ -27,7 +26,7 @@ fn count_trees(matrix: ArrayView2<char>, shift_per_row: usize, shift_per_col: us
     let mut trees = 0;
 
     for y in (0..height).step_by(shift_per_col) {
-        if matrix[[y,x]] == '#' {
+        if matrix[[y, x]] == '#' {
             trees += 1;
         }
 
@@ -39,7 +38,6 @@ fn count_trees(matrix: ArrayView2<char>, shift_per_row: usize, shift_per_col: us
 
 pub fn run() -> Result {
     let matrix = parse_input(read_input("day03")?)?;
-
 
     let trees = count_trees(matrix.view(), 3, 1);
     println!("part A: {}", trees);
