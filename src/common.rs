@@ -1,5 +1,5 @@
 pub use anyhow::{anyhow, bail, Context as _, Error};
-pub use itertools::{enumerate, zip, Itertools};
+pub use itertools::{enumerate, zip, Itertools, all, any};
 use std::cmp::{Ord, Ordering};
 use std::default::Default;
 
