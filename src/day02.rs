@@ -71,7 +71,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_parse_line() {
+    fn test_is_valid() {
         let lines = vec!["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"];
 
         let pw = vec![
