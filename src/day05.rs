@@ -2,7 +2,9 @@ use crate::common::*;
 use std::collections::BTreeSet;
 
 fn boarding_pass_to_number(string: &str) -> usize {
-    string.chars().fold(0, |v, c| v * 2 + "RB".contains(c) as usize)
+    string
+        .chars()
+        .fold(0, |v, c| v * 2 + "RB".contains(c) as usize)
 }
 
 pub fn run() -> Result {
@@ -21,7 +23,6 @@ pub fn run() -> Result {
         .unwrap();
 
     println!("part B: {}", missing);
-
 
     Ok(())
 }
