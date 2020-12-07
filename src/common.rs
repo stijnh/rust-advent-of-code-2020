@@ -1,7 +1,11 @@
 pub use anyhow::{anyhow, bail, Context as _, Error};
 pub use itertools::{all, any, enumerate, zip, Itertools};
+use lazy_static::lazy_static;
+use regex::Regex;
 use std::cmp::{Ord, Ordering};
+use std::collections::HashMap;
 use std::default::Default;
+use std::sync::Mutex;
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;
 
@@ -24,4 +28,32 @@ pub fn read_input(filename: &str) -> Result<Vec<String>> {
 
 pub fn cmp<T: Ord>(lhs: T, rhs: T) -> Ordering {
     Ord::cmp(&lhs, &rhs)
+}
+
+lazy_static! {
+    static ref PATTERN_CACHE: Mutex<HashMap<String, &'static Regex>> = Mutex::default();
+}
+
+fn compile(pattern: &str) -> &'static Regex {
+    let mut guard = PATTERN_CACHE.lock().unwrap();
+    if let Some(p) = guard.get(pattern) {
+        return p;
+    }
+
+    let result = Box::leak(Box::new(Regex::new(pattern).unwrap()));
+    guard.insert(pattern.to_string(), result);
+
+    result
+}
+
+pub fn is_match(pattern: &str, string: &str) -> bool {
+    compile(pattern).is_match(string)
+}
+
+pub fn find<'t>(pattern: &str, string: &'t str) -> Option<regex::Captures<'t>> {
+    compile(pattern).captures(string)
+}
+
+pub fn find_all<'t>(pattern: &str, string: &'t str) -> regex::CaptureMatches<'static, 't> {
+    compile(pattern).captures_iter(string)
 }
