@@ -1,14 +1,13 @@
 use crate::common::*;
-use itertools::iproduct;
 use std::collections::HashSet;
-use std::ops::RangeInclusive;
 
-fn find_xmass_weakness(numbers: &[usize]) -> Option<usize> {
+fn find_xmass_weakness(numbers: &[usize]) -> Result<usize> {
+    const PREAMBLE_LEN: usize = 25;
     let mut combinations = HashSet::new();
 
     for (i, &x) in enumerate(numbers) {
-        if i >= 25 && !combinations.contains(&x) {
-            return Some(i);
+        if i >= PREAMBLE_LEN && !combinations.contains(&x) {
+            return Ok(i);
         }
 
         for y in &numbers[..i] {
@@ -16,10 +15,10 @@ fn find_xmass_weakness(numbers: &[usize]) -> Option<usize> {
         }
     }
 
-    None
+    Err(anyhow!("number not found"))
 }
 
-fn find_range(numbers: &[usize], needle: usize) -> Option<(usize, usize)> {
+fn find_range(numbers: &[usize], needle: usize) -> Result<(usize, usize)> {
     let mut sums = vec![0; numbers.len()];
 
     for n in 0..numbers.len() {
@@ -27,12 +26,12 @@ fn find_range(numbers: &[usize], needle: usize) -> Option<(usize, usize)> {
             sums[i] += numbers[i + n];
 
             if sums[i] == needle {
-                return Some((i, i + n));
+                return Ok((i, i + n));
             }
         }
     }
 
-    None
+    Err(anyhow!("range not found"))
 }
 
 pub fn run() -> Result {
@@ -41,15 +40,12 @@ pub fn run() -> Result {
         .map(|s| s.parse::<usize>())
         .collect::<Result<Vec<_>, _>>()?;
 
-    let index = find_xmass_weakness(&numbers).ok_or(anyhow!("number not found"))?;
-    println!("part A: {}", numbers[index]);
+    let index = find_xmass_weakness(&numbers)?;
+    let p = numbers[index];
+    println!("part A: {}", p);
 
-    let (begin, end) =
-        find_range(&numbers[..index], numbers[index]).ok_or(anyhow!("range not found"))?;
-
-    let min = numbers[begin..=end].iter().max().unwrap();
-    let max = numbers[begin..=end].iter().min().unwrap();
-
+    let (begin, end) = find_range(&numbers[..index], p)?;
+    let (min, max) = numbers[begin..=end].iter().minmax().into_option().unwrap();
     println!("part B: {:?}", min + max);
 
     Ok(())

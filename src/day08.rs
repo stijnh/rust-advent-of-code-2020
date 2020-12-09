@@ -37,10 +37,10 @@ fn fix_program(program: &Program) -> Result<Program> {
 }
 
 pub fn run() -> Result {
-    let mut p = Program::parse_input("day08")?;
+    let p = Program::parse_input("day08")?;
     println!("part A: {}", run_until_done(&p)?.acc());
 
-    let mut fixed_p = fix_program(&p)?;
+    let fixed_p = fix_program(&p)?;
     println!("part B: {}", run_until_done(&fixed_p)?.acc());
 
     Ok(())

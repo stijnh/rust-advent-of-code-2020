@@ -8,7 +8,7 @@ fn boarding_pass_to_number(string: &str) -> usize {
 }
 
 pub fn run() -> Result {
-    let mut passes = read_input("day05")?
+    let passes = read_input("day05")?
         .iter()
         .map(|s| boarding_pass_to_number(s))
         .collect::<BTreeSet<_>>();

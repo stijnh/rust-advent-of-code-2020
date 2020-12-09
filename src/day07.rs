@@ -8,8 +8,8 @@ fn parse_edge(
     nodes: &mut HashMap<String, NodeIndex>,
 ) -> Result {
     let mut parts = line.split(" bags contain ");
-    let mut color = parts.next().unwrap_or_default().to_string();
-    let mut rest = parts.next().unwrap_or_default();
+    let color = parts.next().unwrap_or_default().to_string();
+    let rest = parts.next().unwrap_or_default();
 
     if rest.is_empty() || rest == "no other bags." {
         return Ok(());
