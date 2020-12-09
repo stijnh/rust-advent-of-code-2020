@@ -44,13 +44,13 @@ pub fn run() -> Result {
     let index = find_xmass_weakness(&numbers).ok_or(anyhow!("number not found"))?;
     println!("part A: {}", numbers[index]);
 
-    let (begin, end) = find_range(&numbers[..index], numbers[index]).ok_or(anyhow!("range not found"))?;
+    let (begin, end) =
+        find_range(&numbers[..index], numbers[index]).ok_or(anyhow!("range not found"))?;
 
     let min = numbers[begin..=end].iter().max().unwrap();
     let max = numbers[begin..=end].iter().min().unwrap();
 
     println!("part B: {:?}", min + max);
-
 
     Ok(())
 }

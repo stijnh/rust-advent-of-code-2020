@@ -55,7 +55,7 @@ impl Program {
 
 impl Index<usize> for Program {
     type Output = Instr;
-    
+
     fn index(&self, i: usize) -> &Instr {
         &self.0[i]
     }
@@ -73,7 +73,6 @@ pub struct Process {
     acc: i32,
 }
 
-
 impl Process {
     pub fn advance(&mut self) -> Result {
         use Instr::*;
@@ -85,14 +84,14 @@ impl Process {
         match self.program[self.pc as usize] {
             Nop(_) => {
                 self.pc += 1;
-            },
+            }
             Acc(v) => {
                 self.acc += v;
                 self.pc += 1;
-            },
+            }
             Jmp(v) => {
                 self.pc += v;
-            },
+            }
         }
 
         Ok(())
@@ -110,4 +109,3 @@ impl Process {
         self.acc
     }
 }
-
