@@ -112,7 +112,7 @@ fn repeat_until_convergence<T: Eq, F: Fn(&T) -> T>(mut val: &T, fun: F) -> T {
 
     loop {
         let mut old_val = new_val;
-        new_val = (fun)(&val);
+        new_val = (fun)(&old_val);
 
         if old_val == new_val {
             break old_val;
