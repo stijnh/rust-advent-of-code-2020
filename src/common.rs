@@ -1,10 +1,12 @@
 pub use anyhow::{anyhow, bail, Context as _, Error};
-pub use itertools::{all, any, enumerate, zip, Itertools};
+pub use itertools::{all, any, enumerate, max, min, zip, Itertools};
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::cmp::{Ord, Ordering};
 use std::collections::HashMap;
 use std::default::Default;
+use std::iter::Map;
+pub use std::mem::swap;
 use std::sync::Mutex;
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;
@@ -28,6 +30,14 @@ pub fn read_input(filename: &str) -> Result<Vec<String>> {
 
 pub fn cmp<T: Ord>(lhs: T, rhs: T) -> Ordering {
     Ord::cmp(&lhs, &rhs)
+}
+
+pub fn map<I, F, B>(iter: I, fun: F) -> Map<I::IntoIter, F>
+where
+    I: IntoIterator,
+    F: FnMut(I::Item) -> B,
+{
+    iter.into_iter().map(fun)
 }
 
 lazy_static! {
