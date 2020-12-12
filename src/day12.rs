@@ -1,12 +1,19 @@
 use crate::common::*;
 
-fn parse_input(lines: &[String]) -> Result<Vec<(&str, i32)>> {
+use serde::Deserialize;
+use recap::Recap;
+
+#[derive(Recap, Deserialize)]
+#[recap(regex="(?P<c>.)(?P<v>[0-9]+)")]
+struct Instr {
+    c: char,
+    v: i32,
+}
+
+fn parse_input(lines: &[String]) -> Result<Vec<Instr>> {
     lines
         .iter()
-        .map(|line| {
-            let (c, n) = line.split_at(1);
-            Ok((c, n.parse()?))
-        })
+        .map(|line| Ok(line.parse()?))
         .collect()
 }
 
@@ -20,19 +27,19 @@ fn rotate((x, y): (i32, i32), angle: i32) -> (i32, i32) {
     }
 }
 
-fn execute(instr: &[(&str, i32)]) -> (i32, i32) {
+fn execute(instr: &[Instr]) -> (i32, i32) {
     let (mut x, mut y) = (0, 0);
     let mut dir = (1, 0);
 
-    for &(c, v) in instr {
+    for &Instr { c, v } in instr {
         match c {
-            "N" => y += v,
-            "S" => y -= v,
-            "E" => x += v,
-            "W" => x -= v,
-            "R" => dir = rotate(dir, v),
-            "L" => dir = rotate(dir, -v),
-            "F" => {
+            'N' => y += v,
+            'S' => y -= v,
+            'E' => x += v,
+            'W' => x -= v,
+            'R' => dir = rotate(dir, v),
+            'L' => dir = rotate(dir, -v),
+            'F' => {
                 x += dir.0 * v;
                 y += dir.1 * v;
             }
@@ -43,20 +50,19 @@ fn execute(instr: &[(&str, i32)]) -> (i32, i32) {
     (x, y)
 }
 
-
-fn execute_real(instr: &[(&str, i32)]) -> (i32, i32) {
+fn execute_real(instr: &[Instr]) -> (i32, i32) {
     let (mut x, mut y) = (0, 0);
     let mut wp = (10, 1);
 
-    for &(c, v) in instr {
+    for &Instr { c, v } in instr {
         match c {
-            "E" => wp.0 += v,
-            "W" => wp.0 -= v,
-            "N" => wp.1 += v,
-            "S" => wp.1 -= v,
-            "R" => wp = rotate(wp, v),
-            "L" => wp = rotate(wp, -v),
-            "F" => {
+            'E' => wp.0 += v,
+            'W' => wp.0 -= v,
+            'N' => wp.1 += v,
+            'S' => wp.1 -= v,
+            'R' => wp = rotate(wp, v),
+            'L' => wp = rotate(wp, -v),
+            'F' => {
                 x += wp.0 * v;
                 y += wp.1 * v;
             }
