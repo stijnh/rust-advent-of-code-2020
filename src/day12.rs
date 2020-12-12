@@ -1,20 +1,16 @@
 use crate::common::*;
 
-fn parse_input(lines: &[String]) -> Result<Vec<(char, i32)>> {
+fn parse_input(lines: &[String]) -> Result<Vec<(&str, i32)>> {
     lines
         .iter()
         .map(|line| {
-            let c = line.chars().next().unwrap_or_default();
-            let i = line[1..]
-                .parse()
-                .with_context(|| format!("while parsing line {:?}", line))?;
-
-            Ok((c, i))
+            let (c, n) = line.split_at(1);
+            Ok((c, n.parse()?))
         })
         .collect()
 }
 
-fn rotate((mut x, mut y): (i32, i32), angle: i32) -> (i32, i32) {
+fn rotate((x, y): (i32, i32), angle: i32) -> (i32, i32) {
     match i32::rem_euclid(angle, 360) {
         0 => (x, y),
         90 => (y, -x),
@@ -24,22 +20,21 @@ fn rotate((mut x, mut y): (i32, i32), angle: i32) -> (i32, i32) {
     }
 }
 
-fn execute(instr: &[(char, i32)]) -> (i32, i32) {
+fn execute(instr: &[(&str, i32)]) -> (i32, i32) {
     let (mut x, mut y) = (0, 0);
     let mut dir = (1, 0);
 
     for &(c, v) in instr {
         match c {
-            'N' => y += v,
-            'S' => y -= v,
-            'E' => x += v,
-            'W' => x -= v,
-            'R' => dir = rotate(dir, v),
-            'L' => dir = rotate(dir, -v),
-            'F' => {
-                let (dx, dy) = dir;
-                x += dx * v;
-                y += dy * v;
+            "N" => y += v,
+            "S" => y -= v,
+            "E" => x += v,
+            "W" => x -= v,
+            "R" => dir = rotate(dir, v),
+            "L" => dir = rotate(dir, -v),
+            "F" => {
+                x += dir.0 * v;
+                y += dir.1 * v;
             }
             _ => println!("unknown command: {}", c),
         }
@@ -48,39 +43,33 @@ fn execute(instr: &[(char, i32)]) -> (i32, i32) {
     (x, y)
 }
 
-fn execute_real(instr: &[(char, i32)]) -> (i32, i32) {
-    let (mut sx, mut sy) = (0, 0);
-    let (mut wx, mut wy) = (10, 1);
+
+fn execute_real(instr: &[(&str, i32)]) -> (i32, i32) {
+    let (mut x, mut y) = (0, 0);
+    let mut wp = (10, 1);
 
     for &(c, v) in instr {
         match c {
-            'N' => wy += v,
-            'S' => wy -= v,
-            'E' => wx += v,
-            'W' => wx -= v,
-            'R' => {
-                let (x, y) = rotate((wx, wy), v);
-                wx = x;
-                wy = y;
-            }
-            'L' => {
-                let (x, y) = rotate((wx, wy), -v);
-                wx = x;
-                wy = y;
-            }
-            'F' => {
-                sx += wx * v;
-                sy += wy * v;
+            "E" => wp.0 += v,
+            "W" => wp.0 -= v,
+            "N" => wp.1 += v,
+            "S" => wp.1 -= v,
+            "R" => wp = rotate(wp, v),
+            "L" => wp = rotate(wp, -v),
+            "F" => {
+                x += wp.0 * v;
+                y += wp.1 * v;
             }
             _ => println!("unknown command: {}", c),
         }
     }
 
-    (sx, sy)
+    (x, y)
 }
 
 pub fn run() -> Result {
-    let instr = parse_input(&read_input("day12")?)?;
+    let input = read_input("day12")?;
+    let instr = parse_input(&input)?;
 
     let (x, y) = execute(&instr);
     println!("part A: ({}, {}) -> {}", x, y, x.abs() + y.abs());
@@ -97,15 +86,12 @@ mod test {
 
     #[test]
     fn test() {
-        let instr = vec![
-            "F10".to_string(),
-            "N3".to_string(),
-            "F7".to_string(),
-            "R90".to_string(),
-            "F11".to_string(),
-        ];
-
-        let instr = parse_input(&instr).unwrap();
+        let input = ["F10", "N3", "F7", "R90", "F11"]
+            .iter()
+            .copied()
+            .map(str::to_string)
+            .collect::<Vec<_>>();
+        let instr = parse_input(&input).unwrap();
 
         let (x, y) = execute(&instr);
         assert_eq!((x, y), (17, -8));
