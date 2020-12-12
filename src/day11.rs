@@ -47,7 +47,7 @@ fn apply_round(old: &Array2<char>) -> Array2<char> {
 
     for i in 0..rows {
         for j in 0..cols {
-            let mut occupied = neighbors([rows, cols], [i, j])
+            let occupied = neighbors([rows, cols], [i, j])
                 .filter(|&a| old[a] == '#')
                 .count();
 
@@ -88,7 +88,7 @@ fn apply_far_round(old: &Array2<char>) -> Array2<char> {
 
     for i in 0..rows {
         for j in 0..cols {
-            let mut occupied = far_neighbors(old, [i, j])
+            let occupied = far_neighbors(old, [i, j])
                 .filter(|&a| old[a] == '#')
                 .count();
 
@@ -107,11 +107,11 @@ fn count_occupied(grid: &Array2<char>) -> usize {
     map(grid, |&c| (c == '#') as usize).sum()
 }
 
-fn repeat_until_convergence<T: Eq, F: Fn(&T) -> T>(mut val: &T, fun: F) -> T {
+fn repeat_until_convergence<T: Eq, F: Fn(&T) -> T>(val: &T, fun: F) -> T {
     let mut new_val = (fun)(&val);
 
     loop {
-        let mut old_val = new_val;
+        let old_val = new_val;
         new_val = (fun)(&old_val);
 
         if old_val == new_val {

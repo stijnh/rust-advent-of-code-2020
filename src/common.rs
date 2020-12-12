@@ -11,6 +11,7 @@ use std::sync::Mutex;
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;
 
+#[allow(dead_code)]
 pub fn default<T: Default>() -> T {
     T::default()
 }
@@ -56,14 +57,17 @@ fn compile(pattern: &str) -> &'static Regex {
     result
 }
 
+#[allow(dead_code)]
 pub fn is_match(pattern: &str, string: &str) -> bool {
     compile(pattern).is_match(string)
 }
 
+#[allow(dead_code)]
 pub fn find<'t>(pattern: &str, string: &'t str) -> Option<regex::Captures<'t>> {
     compile(pattern).captures(string)
 }
 
+#[allow(dead_code)]
 pub fn find_all<'t>(pattern: &str, string: &'t str) -> regex::CaptureMatches<'static, 't> {
     compile(pattern).captures_iter(string)
 }
