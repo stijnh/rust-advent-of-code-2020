@@ -3,12 +3,13 @@ pub use itertools::{all, any, enumerate, max, min, zip, Itertools};
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::cmp::{Ord, Ordering};
-use std::collections::HashMap;
 use std::default::Default;
 use std::iter::{Map, Sum};
 pub use std::mem::swap;
 use std::sync::Mutex;
 
+pub type HashMap<K, V> = std::collections::HashMap<K, V, fnv::FnvBuildHasher>;
+pub type HashSet<K> = std::collections::HashSet<K, fnv::FnvBuildHasher>;
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;
 
 #[allow(dead_code)]
