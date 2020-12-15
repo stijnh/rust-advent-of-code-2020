@@ -5,7 +5,7 @@ use regex::Regex;
 use std::cmp::{Ord, Ordering};
 use std::collections::HashMap;
 use std::default::Default;
-use std::iter::Map;
+use std::iter::{Map, Sum};
 pub use std::mem::swap;
 use std::sync::Mutex;
 
@@ -39,6 +39,10 @@ where
     F: FnMut(I::Item) -> B,
 {
     iter.into_iter().map(fun)
+}
+
+pub fn sum<I>(iter: I) -> I::Item where I: IntoIterator, I::Item: Sum {
+    iter.into_iter().sum()
 }
 
 lazy_static! {
