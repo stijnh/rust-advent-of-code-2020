@@ -42,7 +42,11 @@ where
     iter.into_iter().map(fun)
 }
 
-pub fn sum<I>(iter: I) -> I::Item where I: IntoIterator, I::Item: Sum {
+pub fn sum<I>(iter: I) -> I::Item
+where
+    I: IntoIterator,
+    I::Item: Sum,
+{
     iter.into_iter().sum()
 }
 

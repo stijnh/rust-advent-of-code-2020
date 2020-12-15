@@ -1,36 +1,30 @@
 use crate::common::*;
+use std::mem::replace;
 
 fn parse_input(line: &str) -> Result<Vec<usize>> {
     line.split(',').map(|s| Ok(s.parse()?)).collect()
 }
 
-fn play_for_n_rounds(n: usize, initial_numbers: &[usize]) -> usize {
-    let mut spoken = HashMap::default();
-    let mut now_spoken = initial_numbers[0];
+fn play_for_n_rounds(n: usize, nums: &[usize]) -> usize {
+    let mut spoken = vec![!0; n];
+    let k = nums.len() - 1;
 
-    for turn in 0..n {
-        let next_spoken = if let Some(&v) = initial_numbers.get(turn + 1) {
-            v
-        } else if let Some(&prev_turn) = spoken.get(&now_spoken) {
-            turn - prev_turn
-        } else {
-            0
-        };
-
-        spoken.insert(now_spoken, turn);
-        now_spoken = next_spoken;
+    for (turn, &v) in enumerate(&nums[..k]) {
+        spoken[v] = turn;
     }
 
-    now_spoken
+    (k..n).fold(nums[k], |v, turn| {
+        usize::saturating_sub(turn, replace(&mut spoken[v], turn))
+    })
 }
 
 pub fn run() -> Result {
-    let numbers = parse_input(&read_input("day15")?[0])?;
+    let nums = parse_input(&read_input("day15")?[0])?;
 
-    let result = play_for_n_rounds(2020 - 1, &numbers);
+    let result = play_for_n_rounds(2020 - 1, &nums);
     println!("part A: {}", result);
 
-    let result = play_for_n_rounds(30_000_000 - 1, &numbers);
+    let result = play_for_n_rounds(30_000_000 - 1, &nums);
     println!("part B: {}", result);
 
     Ok(())

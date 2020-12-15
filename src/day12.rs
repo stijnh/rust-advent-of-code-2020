@@ -1,20 +1,17 @@
 use crate::common::*;
 
-use serde::Deserialize;
 use recap::Recap;
+use serde::Deserialize;
 
 #[derive(Recap, Deserialize)]
-#[recap(regex="(?P<c>.)(?P<v>[0-9]+)")]
+#[recap(regex = "(?P<c>.)(?P<v>[0-9]+)")]
 struct Instr {
     c: char,
     v: i32,
 }
 
 fn parse_input(lines: &[String]) -> Result<Vec<Instr>> {
-    lines
-        .iter()
-        .map(|line| Ok(line.parse()?))
-        .collect()
+    lines.iter().map(|line| Ok(line.parse()?)).collect()
 }
 
 fn rotate((x, y): (i32, i32), angle: i32) -> (i32, i32) {
