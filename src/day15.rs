@@ -6,7 +6,12 @@ fn parse_input(line: &str) -> Result<Vec<usize>> {
 }
 
 fn play_for_n_rounds(n: usize, nums: &[usize]) -> usize {
-    let mut spoken = vec![!0; n];
+    if n < nums.len() {
+        return nums[n];
+    }
+
+    let m = max(nums).unwrap();
+    let mut spoken = vec![!0; usize::max(n, m + 1)];
     let k = nums.len() - 1;
 
     for (turn, &v) in enumerate(&nums[..k]) {
