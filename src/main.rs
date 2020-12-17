@@ -15,6 +15,7 @@ mod day13;
 mod day14;
 mod day15;
 mod day16;
+mod day17;
 mod gbcode;
 
 use common::*;
@@ -38,6 +39,7 @@ fn main() -> Result {
         day14::run,
         day15::run,
         day16::run,
+        day17::run,
     ];
 
     let mut args = env::args();
