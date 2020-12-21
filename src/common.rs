@@ -7,6 +7,7 @@ use std::default::Default;
 use std::iter::{Map, Sum};
 pub use std::mem::swap;
 use std::sync::Mutex;
+use std::iter::FromIterator as _;
 
 pub type HashMap<K, V> = std::collections::HashMap<K, V, fnv::FnvBuildHasher>;
 pub type HashSet<K> = std::collections::HashSet<K, fnv::FnvBuildHasher>;
