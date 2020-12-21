@@ -46,17 +46,15 @@ fn parse_input(lines: &[String]) -> Result<(Vec<Rule>, Vec<String>)> {
         parse_rule(&line, &mut rules)?;
     }
 
-
     Ok((rules, messages))
 }
 
 #[derive(Clone, Debug)]
 struct NormRules {
-    terms: Vec<(usize, char)>, // R_i -> "c"
+    terms: Vec<(usize, char)>,           // R_i -> "c"
     triples: Vec<(usize, usize, usize)>, // R_i -> R_j R_k
     max_id: usize,
 }
-
 
 fn normalize_rules(input: &[Rule]) -> NormRules {
     let mut terms = vec![];
@@ -69,19 +67,20 @@ fn normalize_rules(input: &[Rule]) -> NormRules {
             Rule::Seq(i, _) => *i,
         })
         .max()
-        .unwrap() + 1;
+        .unwrap()
+        + 1;
 
     for rule in input {
         match rule {
             Rule::Term(i, c) => {
                 terms.push((*i, *c));
-            },
+            }
             Rule::Seq(i, list) if list.len() == 1 => {
                 aliases.push((*i, list[0]));
-            },
+            }
             Rule::Seq(i, list) if list.len() == 2 => {
                 triples.push((*i, list[0], list[1]));
-            },
+            }
             Rule::Seq(i, list) if list.len() == 3 => {
                 triples.push((*i, list[0], next_id));
                 triples.push((next_id, list[1], list[2]));
@@ -142,9 +141,8 @@ fn matches(line: &str, rules: &NormRules) -> bool {
         }
     }
 
-
     for l in 1..n {
-        for s in 0..=(n - l -1) {
+        for s in 0..=(n - l - 1) {
             for p in 0..l {
                 for &(a, b, c) in triples {
                     if m[[p, s, b]] && m[[l - p - 1, s + p + 1, c]] {
@@ -157,7 +155,6 @@ fn matches(line: &str, rules: &NormRules) -> bool {
 
     m[[n - 1, 0, 0]]
 }
-
 
 pub fn run() -> Result {
     let input = read_input("day19")?;

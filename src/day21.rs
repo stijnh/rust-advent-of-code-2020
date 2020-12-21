@@ -84,6 +84,5 @@ pub fn run() -> Result {
 
     println!("pat B: {}", list);
 
-
     Ok(())
 }
