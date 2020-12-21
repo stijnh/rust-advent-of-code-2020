@@ -1,5 +1,4 @@
 use crate::common::*;
-use std::iter::FromIterator;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -16,8 +15,8 @@ impl FromStr for Food {
             .ok_or_else(|| anyhow!("invalid line {:?}", line))?;
 
         Ok(Self {
-            ingredients: m[1].split(' ').map(str::to_string).collect(),
-            allergens: m[2].split(", ").map(str::to_string).collect(),
+            ingredients: m[1].split(' ').map_into().collect(),
+            allergens: m[2].split(", ").map_into().collect(),
         })
     }
 }
@@ -26,29 +25,28 @@ fn parse_input(lines: &[String]) -> Result<Vec<Food>> {
     map(lines, |s| s.parse()).collect()
 }
 
-fn find_allergens(foods: &[Food]) -> Result<HashMap<String, String>> {
-    let mut output: HashMap<String, String> = default();
-    let mut options: HashMap<String, HashSet<String>> = default();
+fn find_allergens(foods: &[Food]) -> Result<HashMap<&str, &str>> {
+    let mut output: HashMap<&str, &str> = default();
+    let mut options: HashMap<&str, HashSet<&str>> = default();
 
     for food in foods {
-        let ingredients = HashSet::from_iter(food.ingredients.clone());
+        let ingredients: HashSet<_> = food.ingredients.iter().map(|s| &**s).collect();
 
         for allergen in &food.allergens {
             options
-                .entry(allergen.to_string())
+                .entry(allergen)
                 .and_modify(|s| *s = &*s & &ingredients)
                 .or_insert_with(|| ingredients.clone());
         }
     }
 
     while options.len() > 0 {
-        let allergen = options
+        let allergen = &**options
             .keys()
             .filter(|&k| options[k].len() == 1)
             .next()
-            .ok_or_else(|| anyhow!("no allergens found"))?
-            .to_string();
-        let ingredient = options.remove(&allergen).unwrap().drain().next().unwrap();
+            .ok_or_else(|| anyhow!("no allergens found"))?;
+        let ingredient = options.remove(&*allergen).unwrap().drain().next().unwrap();
 
         for v in options.values_mut() {
             v.remove(&ingredient);
@@ -68,7 +66,7 @@ pub fn run() -> Result {
     let mut count = 0;
     for food in &foods {
         for ing in &food.ingredients {
-            if !ing2all.contains_key(ing) {
+            if !ing2all.contains_key(&**ing) {
                 count += 1;
             }
         }
