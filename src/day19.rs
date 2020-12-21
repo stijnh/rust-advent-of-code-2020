@@ -1,6 +1,5 @@
 use crate::common::*;
 use ndarray::prelude::*;
-use std::collections::VecDeque;
 
 enum Rule {
     Term(usize, char),
