@@ -25,7 +25,7 @@ fn parse_input(lines: &[String]) -> Result<(Vec<usize>, Vec<usize>)> {
     Ok((player1, player2))
 }
 
-fn score(mut cards: &[usize]) -> usize {
+fn score(cards: &[usize]) -> usize {
     cards
         .iter()
         .rev()
