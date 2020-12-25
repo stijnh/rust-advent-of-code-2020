@@ -66,10 +66,10 @@ mod test {
     fn test_game() {
         let input = vec![3, 8, 9, 1, 2, 5, 4, 6, 7];
 
-        let mut output = play_game(input.clone(), 10);
+        let output = play_game(input.clone(), 10);
         assert_eq!(&output, &[1, 9, 2, 6, 5, 8, 3, 7, 4]);
 
-        let mut output = play_game(input.clone(), 100);
+        let output = play_game(input.clone(), 100);
         assert_eq!(&output, &[1, 6, 7, 3, 8, 4, 5, 2, 9]);
 
         let mut input = input.clone();

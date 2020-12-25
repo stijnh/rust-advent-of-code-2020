@@ -128,6 +128,6 @@ mod test {
         ];
 
         let program = parse_input(&program).unwrap();
-        let mem = execute_v1(&program);
+        let _mem = execute_v1(&program);
     }
 }
